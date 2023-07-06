@@ -4,12 +4,14 @@ const moveSound = new Audio("../music/move.mp3");
 const gameOverSound = new Audio("../music/gameover.mp3");
 const musicSound = new Audio("../music/music.mp3");
 const foodSound = new Audio("../music/food.mp3");
-const speed = 10;
+const speed = 7;
 let lastPaintTime = 0;
 let snakeArr = [{ x: 13, y: 15 }];
 let food = { x: 10, y: 15 };
 let score = 0;
+let highestScore = localStorage.getItem("highestScore");
 let Score = document.getElementById("score");
+let HighestScore = document.getElementById("highestScore");
 
 // game functions
 function main(ctime) {
@@ -53,14 +55,16 @@ const gameEngine = () => {
       let x = snakeArr[0].x + inputDir.x;
       let y = snakeArr[0].y + inputDir.y;
       snakeArr.unshift({ x, y });
-      const a = 2;
-      const b = 16;
+      const a = 3;
+      const b = 15;
       food = {
          x: Math.round(a + (b - a) * Math.random()),
          y: Math.round(a + (b - a) * Math.random()),
       };
    }
    Score.innerHTML = "Score: " + score;
+   highestScore = localStorage.getItem("highestScore");
+   HighestScore.innerHTML = "Highest Score: " + highestScore;
 
    //moving snake
    for (let index = snakeArr.length - 1; index > 0; index--) {
@@ -90,6 +94,8 @@ const gameEngine = () => {
       foodElement.classList.add("food");
       board.appendChild(foodElement);
    });
+
+   localStorage.setItem("highestScore", Math.max(highestScore, score));
 };
 
 // logic for game
@@ -118,4 +124,34 @@ window.addEventListener("keydown", (e) => {
       default:
          break;
    }
+});
+
+const upBtn = document.querySelector(".upBtn");
+upBtn.addEventListener("click", (event) => {
+   moveSound.play();
+   inputDir.x = 0;
+   console.log("up");
+   inputDir.y = -1;
+});
+const downBtn = document.querySelector(".downBtn");
+downBtn.addEventListener("click", (event) => {
+   moveSound.play();
+   inputDir.x = 0;
+   console.log("down");
+   inputDir.y = 1;
+});
+const leftBtn = document.querySelector(".leftBtn");
+leftBtn.addEventListener("click", (event) => {
+   moveSound.play();
+   console.log("left");
+   inputDir.x = -1;
+   inputDir.y = 0;
+});
+
+const rightBtn = document.querySelector(".rightBtn");
+rightBtn.addEventListener("click", (event) => {
+   moveSound.play();
+   inputDir.x = 1;
+   console.log("right");
+   inputDir.y = 0;
 });
